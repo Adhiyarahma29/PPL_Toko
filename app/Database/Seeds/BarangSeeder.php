@@ -14,7 +14,7 @@ class BarangSeeder extends Seeder
 
 
         // Looping untuk membuat 30 data contoh
-        for ($i = 1; $i <= 3; $i++) {
+        for ($i = 1; $i <= 6; $i++) {
             // Kode barang unik (B001, B002, B003, ...)
             $kode = 'B' . str_pad($i, 3, '0', STR_PAD_LEFT);
 

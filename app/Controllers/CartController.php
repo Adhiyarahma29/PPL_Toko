@@ -8,41 +8,41 @@ use CodeIgniter\Controller;
 
 class CartController extends Controller
 {
-    public function addToCart()
+    protected $barangModel;
+    protected $cartModel;
+
+    public function __construct()
     {
-        // Ambil data dari form
-        $kodeBarang = $this->request->getPost('kode_barang');
-        $quantity = $this->request->getPost('quantity');
-
-
-        // Ambil data barang dari database
-        $barangModel = new BarangModel();
-        $barang = $barangModel->find($kodeBarang);
-
-        // Jika barang tidak ditemukan, kembali ke halaman sebelumnya
-        if (!$barang) {
-            return redirect()->back()->with('error', 'Barang tidak ditemukan.');
-        }
-
-        // Tambahkan barang ke dalam keranjang
-        $cart = session()->get('cart') ?? [];
-        $cart[$kodeBarang] = [
-            'nama_barang' => $barang['nama_barang'],
-            'harga' => $barang['harga'],
-            'jumlah' => $quantity
-        ];
-        session()->set('cart', $cart);
-
-        // Redirect ke halaman keranjang
-        return redirect()->to('/cart')->with('success', 'Barang berhasil ditambahkan ke keranjang.');
+        $this->barangModel = new BarangModel();
+        $this->cartModel = new CartModel();
     }
 
-    public function viewCart()
+    public function addToCart($kode_barang)
     {
-        // Ambil data keranjang dari session
-        $cart = session()->get('cart');
+        $jumlah = $this->request->getPost('jumlah');
 
-        // Load view dan kirim data keranjang
-        return view('v_cart', ['cart' => $cart]);
+        // Get data barang by kode_barang
+        $barang = $this->barangModel->getDataBarangByKode($kode_barang);
+
+        if ($barang) {
+            // Add to cart with necessary data
+            $this->cartModel->addToCart($kode_barang, $jumlah, $barang['harga'], $barang['nama_barang']);
+
+            // Redirect to cart page
+            return redirect()->to(site_url('cart'));
+        } else {
+        }
+    }
+
+    public function index()
+    {
+        $cartItems = $this->cartModel->getCartItems();
+        $data = ['cartItems' => $cartItems];
+        return view('v_cart', $data);
+    }
+
+    public function checkout()
+    {
+        // Implement your checkout logic here
     }
 }

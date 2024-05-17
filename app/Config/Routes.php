@@ -8,5 +8,7 @@ use CodeIgniter\Router\RouteCollection;
  */
 $routes->get('/', 'c_home::index');
 $routes->get('/detail/(:any)', 'c_home::detail/$1');
-$routes->post('/add-to-cart', 'CartController::addToCart');
-$routes->get('/cart', 'CartController::viewCart');
+$routes->post('cart/addToCart/(:segment)', 'CartController::addToCart/$1');
+
+$routes->get('cart', 'CartController::index');
+$routes->get('cart/checkout', 'CartController::checkout');
