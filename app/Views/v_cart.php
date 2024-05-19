@@ -18,7 +18,7 @@
     <div class="container">
         <?php
         $totalHarga = 0; // Inisialisasi total harga
-        foreach ($cartItems as $item) :
+        foreach ($cart as $item) :
             $subtotal = $item['jumlah'] * $item['harga'];
             $totalHarga += $subtotal; // Hitung total harga
         ?>
@@ -30,7 +30,9 @@
                     <p class="card-text">Subtotal: Rp <?= number_format($subtotal, 0, ',', '.') ?></p>
                 </div>
             </div>
+            <a href="<?= site_url('cart/remove/' . $item['kode_barang']) ?>">HAPUS</a>
         <?php endforeach; ?>
+
         <!-- Tampilkan total harga di sini -->
         <div class="text-right">
             <h4>Total Harga: Rp <?= number_format($totalHarga, 0, ',', '.') ?></h4>
