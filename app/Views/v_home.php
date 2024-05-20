@@ -110,7 +110,7 @@
             <div class="collapse navbar-collapse" id="navbarNav">
                 <ul class="navbar-nav ml-auto">
                     <li class="nav-item">
-                        <a class="nav-link" href="#"><i class="bi bi-cart large-icon"></i></a>
+                        <a class="nav-link" href="/cart"><i class="bi bi-cart large-icon"></i></a>
                     </li>
                 </ul>
             </div>

@@ -35,15 +35,14 @@
                         <h5 class="product-title"><?= esc($product['nama_barang']) ?></h5>
                         <p class="product-description">Deskripsi: <?= esc($product['deskripsi']) ?></p>
                         <p class="price">Rp <?= number_format($product['harga'], 2, ',', '.') ?></p>
-                        <form action="/add-to-cart" method="post">
+                        <form action="<?= site_url('cart/addToCart/' . $product['kode_barang']) ?>" method="post">
                             <div class="input-group mb-3">
                                 <div class="input-group-prepend">
                                     <span class="input-group-text">Jumlah</span>
                                 </div>
-                                <input type="number" class="form-control" name="quantity" aria-label="Jumlah" min="1" value="1" required>
+                                <input type="number" class="form-control" name="jumlah" aria-label="Jumlah" min="1" value="1" required>
                             </div>
-                            <input type="hidden" name="kode_barang" value="<?= $product['kode_barang'] ?>">
-                            <button type="submit" class="btn btn-primary">Beli Sekarang</button>
+                            <button type="submit" class="btn btn-primary" name="buy_now">Beli Sekarang</button>
                             <button type="submit" class="btn btn-outline-success btn-cart" name="add_to_cart"><i class="bi bi-cart"></i> Tambah ke Keranjang</button>
                         </form>
                     </div>

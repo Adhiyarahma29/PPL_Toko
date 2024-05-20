@@ -3,46 +3,61 @@
 namespace App\Controllers;
 
 use App\Models\BarangModel;
-use App\Models\CartModel;
+
 use CodeIgniter\Controller;
 
 class CartController extends Controller
 {
-    public function addToCart()
+    public function __construct()
     {
-        // Ambil data dari form
-        $kodeBarang = $this->request->getPost('kode_barang');
-        $quantity = $this->request->getPost('quantity');
-
-
-        // Ambil data barang dari database
-        $barangModel = new BarangModel();
-        $barang = $barangModel->find($kodeBarang);
-
-        // Jika barang tidak ditemukan, kembali ke halaman sebelumnya
-        if (!$barang) {
-            return redirect()->back()->with('error', 'Barang tidak ditemukan.');
-        }
-
-        // Tambahkan barang ke dalam keranjang
-        $cart = session()->get('cart') ?? [];
-        $cart[$kodeBarang] = [
-            'nama_barang' => $barang['nama_barang'],
-            'harga' => $barang['harga'],
-            'jumlah' => $quantity
-        ];
-        session()->set('cart', $cart);
-
-        // Redirect ke halaman keranjang
-        return redirect()->to('/cart')->with('success', 'Barang berhasil ditambahkan ke keranjang.');
+        session();
     }
 
-    public function viewCart()
+    public function addToCart($kode_barang)
     {
-        // Ambil data keranjang dari session
-        $cart = session()->get('cart');
 
-        // Load view dan kirim data keranjang
-        return view('v_cart', ['cart' => $cart]);
+        $barangModel = new BarangModel();
+        // Misalkan Anda ingin menyimpan data barang ke dalam session keranjang
+        $cart = session()->get('cart') ?? [];
+
+
+        // Jika barang sudah ada dalam keranjang, tambahkan jumlahnya
+        if (array_key_exists($kode_barang, $cart)) {
+            $cart[$kode_barang]['jumlah'] += 1;
+        } else {
+            // Jika barang belum ada dalam keranjang, tambahkan sebagai item baru
+            $barang = $barangModel->getDataBarangByKode($kode_barang);
+            if ($barang) {
+                $cart[$kode_barang] = [
+                    'kode_barang' => $kode_barang,
+                    'nama_barang' => $barang['nama_barang'],
+                    'harga' => $barang['harga'],
+                    'jumlah' => isset($cart[$kode_barang]) ? $cart[$kode_barang]['jumlah'] + 1 : 1
+                ];
+            }
+        }
+
+        // Simpan kembali keranjang ke dalam session
+        session()->set('cart', $cart);
+
+        return redirect()->to('cart');
+    }
+
+    public function lookCart()
+    {
+        $data['cart'] = session()->get('cart') ?? [];
+
+        return view('v_cart', $data);
+    }
+
+    public function removeFromCart($kode_barang)
+    {
+        $cart = session()->get('cart') ?? [];
+
+        unset($cart[$kode_barang]);
+
+        session()->set('cart', $cart);
+
+        return redirect()->to('cart');
     }
 }
