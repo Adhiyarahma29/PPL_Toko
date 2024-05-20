@@ -8,7 +8,15 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.10.2/font/bootstrap-icons.min.css">
     <style>
         body {
-            background-color: #f8f9fa;
+            background: linear-gradient(135deg, #0f4c75, #3282b8, #42a4aa, #ffffff);
+            background-size: 400% 400%;
+            animation: gradient 15s ease infinite;
+        }
+
+        @keyframes gradient {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
         }
 
         .navbar {
@@ -23,30 +31,37 @@
 
         .card {
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-            transition: transform 0.2s;
+            transition: transform 0.2s, box-shadow 0.2s;
         }
 
         .card:hover {
             transform: translateY(-10px);
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
         }
 
         .card-img-top {
             width: 100%;
             height: 200px;
             object-fit: cover;
+            border-top-left-radius: calc(0.25rem - 1px);
+            border-top-right-radius: calc(0.25rem - 1px);
         }
 
         .card-body {
             text-align: center;
+            background: #fff;
+            border-bottom-left-radius: calc(0.25rem - 1px);
+            border-bottom-right-radius: calc(0.25rem - 1px);
         }
 
         .card-title {
             font-size: 1.25rem;
             font-weight: bold;
+            color: #333;
         }
 
         .card-text {
-            color: #555;
+            color: #777;
         }
 
         .price {
@@ -62,12 +77,24 @@
         .btn {
             margin-top: 20px;
             width: 100%;
+            background-color: #3282b8;
+            border: none;
         }
 
-        /* Additional CSS for larger icons */
+        .btn:hover {
+            background-color: #0f4c75;
+        }
+
         .large-icon {
             font-size: 2rem;
-            /* Adjust as needed */
+        }
+
+        .footer {
+            background-color: #343a40;
+            color: white;
+            padding: 20px 0;
+            text-align: center;
+            margin-top: 50px;
         }
     </style>
 </head>
@@ -90,8 +117,9 @@
         </div>
     </nav>
 
+    <!-- Product List -->
     <div class="container">
-        <h1 class="mt-5 text-center">Daftar Produk</h1>
+        <h1 class="mt-5 text-center text-white">Daftar Produk</h1>
         <div class="row">
             <?php if (!empty($products) && is_array($products)) : ?>
                 <?php foreach ($products as $product) : ?>
@@ -101,7 +129,7 @@
                                 <img src="<?= esc($product['gambar']) ?>" class="card-img-top" alt="<?= esc($product['nama_barang']) ?>">
                                 <div class="card-body">
                                     <h5 class="card-title"><?= esc($product['nama_barang']) ?></h5>
-                                    <p class="card-text">Jumlah: <?= esc($product['deskripsi']) ?></p>
+                                    <p class="card-text"><?= esc($product['deskripsi']) ?></p>
                                     <p class="card-text"><span class="price">Rp <?= number_format($product['harga'], 2, ',', '.') ?></span></p>
                                     <a href="#" class="btn btn-primary">Beli Sekarang</a>
                                 </div>
@@ -110,10 +138,18 @@
                     </div>
                 <?php endforeach; ?>
             <?php else : ?>
-                <p class="text-center">Tidak ada produk yang ditemukan.</p>
+                <p class="text-center text-white">Tidak ada produk yang ditemukan.</p>
             <?php endif; ?>
         </div>
     </div>
+
+    <!-- Footer -->
+    <div class="footer">
+        <div class="container">
+            <p>&copy; 2024 Your Shop. All Rights Reserved.</p>
+        </div>
+    </div>
+
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
