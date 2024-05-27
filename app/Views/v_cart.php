@@ -13,6 +13,18 @@
         .cart-item-card {
             margin-bottom: 20px;
         }
+
+        footer {
+            position: fixed;
+            bottom: 0;
+            width: 100%;
+            background-color: #343a40;
+            padding: 10px 0;
+        }
+
+        .footer-btn {
+            width: 100%;
+        }
     </style>
 </head>
 
@@ -33,7 +45,7 @@
         </div>
     </nav>
 
-    <div class="container">
+    <div class="container mb-5">
         <h1 class="text-center mt-3">Keranjang Belanja</h1>
         <?php
         $totalHarga = 0; // Inisialisasi total harga
@@ -47,22 +59,21 @@
                     <p class="card-text">Jumlah: <?= $item['jumlah'] ?></p>
                     <p class="card-text">Harga: Rp <?= number_format($item['harga'], 0, ',', '.') ?></p>
                     <p class="card-text">Subtotal: Rp <?= number_format($subtotal, 0, ',', '.') ?></p>
-                    <a href="<?= site_url('cart/remove/' . $item['kode_barang']) ?>">HAPUS</a>
                     <a href="<?= site_url('cart/remove/' . $item['kode_barang']) ?>" class="btn btn-danger">Hapus</a>
                 </div>
             </div>
 
         <?php endforeach; ?>
 
-        <!-- Tampilkan total harga di sini -->
-        <div class="text-right">
-            <h4>Total Harga: Rp <?= number_format($totalHarga, 0, ',', '.') ?></h4>
-            <a href="<?= site_url('cart/checkout') ?>" class="btn btn-success">Checkout</a>
-        </div>
     </div>
-    <button><a href="<?= site_url('cart/remove/') ?>">HAPUS</a></button>
 
-    <!-- Add your checkout button and other elements here -->
+    <footer class="bg-dark text-white text-center">
+        <div class="container">
+            <h4>Total Harga: Rp <?= number_format($totalHarga, 0, ',', '.') ?></h4>
+            <a href="<?= site_url('cart/checkout') ?>" class="btn btn-success footer-btn">Checkout</a>
+        </div>
+    </footer>
+
 </body>
 
 </html>
