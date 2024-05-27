@@ -13,7 +13,7 @@ class JualModel extends Model
     ];
     // Optional: You can define validation rules for the fields
     protected $validationRules = [
-        'id_transaksi' => 'required|alpha_numeric|min_length[5]|max_length[5]',
+        'id_transaksi' => 'required|alpha_numeric|min_length[3]|max_length[15]',
         'nama'         => 'required|min_length[3]|max_length[100]',
         'email'        => 'required|valid_email|max_length[100]',
         'alamat'       => 'required|min_length[10]|max_length[255]',

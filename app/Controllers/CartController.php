@@ -84,6 +84,21 @@ class CartController extends Controller
             $totalHarga += $subtotal;
         }
 
+        // Get form data
+        $nama = $this->request->getPost('nama');
+        $email = $this->request->getPost('email');
+        $alamat = $this->request->getPost('alamat');
+
+        // Get nama barang
+        $barangModel = new BarangModel();
+        $namaBarang = [];
+        foreach ($cart as $item) {
+            $barang = $barangModel->find($item['kode_barang']);
+            if ($barang) {
+                $namaBarang[] = $barang['nama_barang'];
+            }
+        }
+
         // Calculate total weight
         $totalBerat = 0;
         foreach ($cart as $item) {
@@ -91,28 +106,36 @@ class CartController extends Controller
         }
 
         // Calculate shipping cost
-        $ongkir = $totalBerat * 3000;
+        $ongkir = max($totalBerat, 1) * 3000;
 
         // Calculate final total price
         $finalTotalHarga = $totalHarga + $ongkir;
 
-        // Prepare data for insertion
+        // Get next id_transaksi
         $jualModel = new JualModel();
-        $data = [
-            'id_transaksi' => uniqid('TRX'),
-            'nama' => $this->request->getPost('nama'),
-            'email' => $this->request->getPost('email'),
-            'alamat' => $this->request->getPost('alamat'),
-            'nama_barang' => json_encode($cart), // Store cart items as JSON
+        $next_id = $jualModel->countAllResults() + 1;
+
+        // Generate id_transaksi
+        $id_transaksi = 'TR' . str_pad($next_id, 3, '0', STR_PAD_LEFT);
+
+        // Insert data into 'jual' table
+        $jualModel->insert([
+            'id_transaksi' => $id_transaksi,
+            'nama' => $nama,
+            'email' => $email,
+            'alamat' => $alamat,
+            'nama_barang' => $namaBarang, // Store array of barang names as JSON string
             'total_harga' => $finalTotalHarga,
             'created_at' => date('Y-m-d H:i:s'),
             'updated_at' => date('Y-m-d H:i:s')
-        ];
+        ]);
 
-        // Save order to database
-        $jualModel->insert($data);
+        // Kurangi stok barang
+        $barangModel->set('jumlah', 'jumlah - ' . $item['jumlah'], false)
+            ->where('kode_barang', $item['kode_barang'])
+            ->update();
 
-        // Clear the cart
+        // Clear cart after checkout
         session()->remove('cart');
 
         return redirect()->to('/cart')->with('success', 'Pembelian berhasil dilakukan.');

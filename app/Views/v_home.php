@@ -2,7 +2,7 @@
 <html lang="en">
 
 <head>
-<meta charset="UTF-8">
+    <meta charset="UTF-8">
     <title>Daftar Produk</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.1.3/dist/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.10.2/font/bootstrap-icons.min.css">
@@ -18,9 +18,17 @@
         }
 
         @keyframes gradient {
-            0% { background-position: 0% 50%; }
-            50% { background-position: 100% 50%; }
-            100% { background-position: 0% 50%; }
+            0% {
+                background-position: 0% 50%;
+            }
+
+            50% {
+                background-position: 100% 50%;
+            }
+
+            100% {
+                background-position: 0% 50%;
+            }
         }
 
         .navbar {
@@ -47,8 +55,7 @@
             width: 100%;
             height: 200px;
             object-fit: cover;
-            border-top-left-radius: calc(0.25rem - 1px);
-            border-top-right-radius: calc(0.25rem - 1px);
+            object-position: center;
         }
 
         .card-body {
@@ -136,7 +143,7 @@
                                     <h5 class="card-title"><?= esc($product['nama_barang']) ?></h5>
                                     <p class="card-text"><?= esc($product['deskripsi']) ?></p>
                                     <p class="card-text"><span class="price">Rp <?= number_format($product['harga'], 2, ',', '.') ?></span></p>
-                
+
                                 </div>
                             </div>
                         </a>
