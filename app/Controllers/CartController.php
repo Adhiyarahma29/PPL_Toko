@@ -4,6 +4,7 @@ namespace App\Controllers;
 
 use App\Models\BarangModel;
 use App\Models\JualModel;
+use App\Models\PenjualanModel;
 use CodeIgniter\Controller;
 
 class CartController extends Controller
@@ -118,6 +119,8 @@ class CartController extends Controller
         // Generate id_transaksi
         $id_transaksi = 'TR' . str_pad($next_id, 3, '0', STR_PAD_LEFT);
 
+
+
         // Insert data into 'jual' table
         $jualModel->insert([
             'id_transaksi' => $id_transaksi,
@@ -131,9 +134,25 @@ class CartController extends Controller
         ]);
 
         // Kurangi stok barang
-        $barangModel->set('jumlah', 'jumlah - ' . $item['jumlah'], false)
-            ->where('kode_barang', $item['kode_barang'])
-            ->update();
+        foreach ($cart as $item) {
+            $barangModel->set('jumlah', 'jumlah - ' . $item['jumlah'], false)
+                ->where('kode_barang', $item['kode_barang'])
+                ->update();
+        }
+
+        // Insert data into 'penjualan' table
+        $penjualanModel = new PenjualanModel();
+        foreach ($cart as $item) {
+            $penjualanModel->insert([
+                'kode_barang' => $item['kode_barang'],
+                'id_transaksi' => $id_transaksi,
+                'nama_barang' => $item['nama_barang'],
+                'jumlah' => $item['jumlah'],
+                'harga' => $item['harga'],
+                'created_at' => date('Y-m-d H:i:s'),
+                'updated_at' => date('Y-m-d H:i:s')
+            ]);
+        }
 
         // Clear cart after checkout
         session()->remove('cart');
