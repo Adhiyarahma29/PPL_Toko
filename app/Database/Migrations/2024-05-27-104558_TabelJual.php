@@ -28,6 +28,10 @@ class TabelJual extends Migration
                 'type' => 'TEXT',
                 'null' => false,
             ],
+            'nama_barang' => [
+                'type' => 'TEXT',
+                'null' => false,
+            ],
             'total_harga' => [
                 'type'       => 'DECIMAL',
                 'constraint' => '10,2',
