@@ -8,8 +8,9 @@ class JualModel extends Model
 {
     protected $table = 'jual';
     protected $primaryKey = 'id_transaksi';
-    protected $allowedFields = ['id_transaksi', 'nama', 'email', 'alamat', 'nama_barang', 'total_harga'];
-
+    protected $allowedFields = [
+        'id_transaksi', 'nama', 'email', 'alamat', 'nama_barang', 'total_harga', 'created_at', 'updated_at', 'deleted_at'
+    ];
     // Optional: You can define validation rules for the fields
     protected $validationRules = [
         'id_transaksi' => 'required|alpha_numeric|min_length[5]|max_length[5]',

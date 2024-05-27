@@ -32,9 +32,18 @@ class TableBarang extends Migration
                 'constraint' => '10,2',
                 'null'       => false,
             ],
+            'berat' => [ // Menambahkan kolom berat
+                'type'       => 'FLOAT',
+                'null'       => true,
+            ],
             'gambar' => [
                 'type'       => 'VARCHAR',
                 'constraint' => 255,
+                'null'       => true,
+            ],
+            'total_ongkir' => [
+                'type'       => 'DECIMAL',
+                'constraint' => '10,2',
                 'null'       => true,
             ],
             'created_at' => [

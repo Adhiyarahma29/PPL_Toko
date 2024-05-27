@@ -12,8 +12,7 @@ class BarangSeeder extends Seeder
         $data = [];
         $imagePath = 'image/';
 
-
-        // Looping untuk membuat 30 data contoh
+        // Looping untuk membuat 6 data contoh
         for ($i = 1; $i <= 6; $i++) {
             // Kode barang unik (B001, B002, B003, ...)
             $kode = 'B' . str_pad($i, 3, '0', STR_PAD_LEFT);
@@ -24,7 +23,8 @@ class BarangSeeder extends Seeder
                 'nama_barang' => 'Susu Ultra Putih 250 Ml ', // Nama barang dengan nomor iterasi
                 'harga' => 1000 * $i, // Harga contoh (dapat Anda atur sesuai keinginan)
                 'jumlah' => rand(10, 50), // Stok acak antara 10 dan 50
-                'gambar'      => $imagePath . 'ultra_putih.png',
+                'berat' => 0.25, // Berat produk dalam kg
+                'gambar' => $imagePath . 'ultra_putih.png',
                 'deskripsi' => 'Susu Ultra Putih 250 Ml dengan kemasan baru'
             ];
 

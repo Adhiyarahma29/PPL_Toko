@@ -44,15 +44,20 @@ class CartController extends Controller
         $data['cart'] = session()->get('cart') ?? [];
         $data['totalHarga'] = 0;
         $data['totalBerat'] = 0;
-        $data['ongkir'] = 0;
 
         foreach ($data['cart'] as $item) {
             $data['totalHarga'] += $item['jumlah'] * $item['harga'];
             $data['totalBerat'] += $item['jumlah'] * $item['berat'];
         }
 
-        $data['ongkir'] = $data['totalBerat'] * 2000; // Hitung ongkir berdasarkan total berat (2000 per kg)
-        $data['totalHarga'] += $data['ongkir']; // Tambahkan ongkir ke total harga
+        // Minimal berat untuk ongkir adalah 1 kg dengan ongkir Rp 3000
+        if ($data['totalBerat'] > 0) {
+            $data['totalOngkir'] = max($data['totalBerat'], 1) * 3000;
+        } else {
+            $data['totalOngkir'] = 0;
+        }
+
+        $data['totalHarga'] += $data['totalOngkir']; // Tambahkan ongkir ke total harga
 
         return view('v_cart', $data);
     }
@@ -68,7 +73,6 @@ class CartController extends Controller
         return redirect()->to('/cart');
     }
 
-
     public function checkout()
     {
         $cart = session()->get('cart') ?? [];
@@ -80,41 +84,37 @@ class CartController extends Controller
             $totalHarga += $subtotal;
         }
 
-        // Get form data
-        $nama = $this->request->getPost('nama');
-        $email = $this->request->getPost('email');
-        $alamat = $this->request->getPost('alamat');
-
-        // Get nama barang
-        $barangModel = new BarangModel();
-        $namaBarang = [];
+        // Calculate total weight
+        $totalBerat = 0;
         foreach ($cart as $item) {
-            $barang = $barangModel->find($item['kode_barang']);
-            if ($barang) {
-                $namaBarang[] = $barang['nama_barang'];
-            }
+            $totalBerat += $item['jumlah'] * $item['berat'];
         }
 
-        // Get next id_transaksi
+        // Calculate shipping cost
+        $ongkir = $totalBerat * 3000;
+
+        // Calculate final total price
+        $finalTotalHarga = $totalHarga + $ongkir;
+
+        // Prepare data for insertion
         $jualModel = new JualModel();
-        $next_id = $jualModel->countAllResults() + 1;
+        $data = [
+            'id_transaksi' => uniqid('TRX'),
+            'nama' => $this->request->getPost('nama'),
+            'email' => $this->request->getPost('email'),
+            'alamat' => $this->request->getPost('alamat'),
+            'nama_barang' => json_encode($cart), // Store cart items as JSON
+            'total_harga' => $finalTotalHarga,
+            'created_at' => date('Y-m-d H:i:s'),
+            'updated_at' => date('Y-m-d H:i:s')
+        ];
 
-        // Generate id_transaksi
-        $id_transaksi = 'TR' . str_pad($next_id, 3, '0', STR_PAD_LEFT);
+        // Save order to database
+        $jualModel->insert($data);
 
-        // Insert data into 'jual' table
-        $jualModel->insert([
-            'id_transaksi' => $id_transaksi,
-            'nama' => $nama,
-            'email' => $email,
-            'alamat' => $alamat,
-            'nama_barang' => $namaBarang, // Store array of barang names as JSON string
-            'total_harga' => $totalHarga
-        ]);
-
-        // Clear cart after checkout
+        // Clear the cart
         session()->remove('cart');
 
-        return redirect()->to('/cart');
+        return redirect()->to('/cart')->with('success', 'Pembelian berhasil dilakukan.');
     }
 }
