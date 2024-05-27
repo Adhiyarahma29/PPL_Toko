@@ -28,9 +28,10 @@
                     <p class="card-text">Jumlah: <?= $item['jumlah'] ?></p>
                     <p class="card-text">Harga: Rp <?= number_format($item['harga'], 0, ',', '.') ?></p>
                     <p class="card-text">Subtotal: Rp <?= number_format($subtotal, 0, ',', '.') ?></p>
+                    <a href="<?= site_url('cart/remove/' . $item['kode_barang']) ?>">HAPUS</a>
                 </div>
             </div>
-            <a href="<?= site_url('cart/remove/' . $item['kode_barang']) ?>">HAPUS</a>
+
         <?php endforeach; ?>
 
         <!-- Tampilkan total harga di sini -->
@@ -38,6 +39,7 @@
             <h4>Total Harga: Rp <?= number_format($totalHarga, 0, ',', '.') ?></h4>
         </div>
     </div>
+    <button><a href="<?= site_url('cart/remove/') ?>">HAPUS</a></button>
     <!-- Add your checkout button and other elements here -->
 </body>
 

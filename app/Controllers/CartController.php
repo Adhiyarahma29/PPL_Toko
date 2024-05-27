@@ -58,6 +58,6 @@ class CartController extends Controller
 
         session()->set('cart', $cart);
 
-        return redirect()->to('cart');
+        return redirect()->to('/cart');
     }
 }
