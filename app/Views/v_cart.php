@@ -3,7 +3,7 @@
 
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <title>Keranjang Belanja</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.1.3/dist/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.10.2/font/bootstrap-icons.min.css">
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
@@ -62,9 +62,7 @@
                     <a href="<?= site_url('cart/remove/' . $item['kode_barang']) ?>" class="btn btn-danger">Hapus</a>
                 </div>
             </div>
-
         <?php endforeach; ?>
-
     </div>
 
     <footer class="bg-dark text-white text-center">
@@ -73,7 +71,6 @@
             <a href="<?= site_url('cart/checkout') ?>" class="btn btn-success footer-btn">Checkout</a>
         </div>
     </footer>
-
 </body>
 
 </html>

@@ -44,8 +44,7 @@
                                 </div>
                                 <input type="number" class="form-control" name="jumlah" aria-label="Jumlah" min="1" value="1" required>
                             </div>
-                            <button type="submit" class="btn btn-primary" name="buy_now">Beli Sekarang</button>
-                            <button type="submit" class="btn btn-outline-success btn-cart" name="add_to_cart"><i class="bi bi-cart"></i> Tambah ke Keranjang</button>
+                            <button type="submit" class="btn btn-outline-success btn-cart"><i class="bi bi-cart"></i> Tambah ke Keranjang</button>
                         </form>
                     </div>
                 </div>
