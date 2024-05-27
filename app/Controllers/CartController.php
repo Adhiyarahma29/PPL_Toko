@@ -16,32 +16,27 @@ class CartController extends Controller
 
     public function addToCart($kode_barang)
     {
-
         $barangModel = new BarangModel();
-        // Misalkan Anda ingin menyimpan data barang ke dalam session keranjang
         $cart = session()->get('cart') ?? [];
+        $jumlah = $this->request->getPost('jumlah') ?? 1;
 
-
-        // Jika barang sudah ada dalam keranjang, tambahkan jumlahnya
         if (array_key_exists($kode_barang, $cart)) {
-            $cart[$kode_barang]['jumlah'] += 1;
+            $cart[$kode_barang]['jumlah'] += $jumlah;
         } else {
-            // Jika barang belum ada dalam keranjang, tambahkan sebagai item baru
             $barang = $barangModel->getDataBarangByKode($kode_barang);
             if ($barang) {
                 $cart[$kode_barang] = [
                     'kode_barang' => $kode_barang,
                     'nama_barang' => $barang['nama_barang'],
                     'harga' => $barang['harga'],
-                    'jumlah' => isset($cart[$kode_barang]) ? $cart[$kode_barang]['jumlah'] + 1 : 1
+                    'jumlah' => $jumlah
                 ];
             }
         }
 
-        // Simpan kembali keranjang ke dalam session
         session()->set('cart', $cart);
 
-        return redirect()->to('cart');
+        return redirect()->to('/cart');
     }
 
     public function lookCart()

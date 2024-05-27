@@ -136,7 +136,7 @@
                                     <h5 class="card-title"><?= esc($product['nama_barang']) ?></h5>
                                     <p class="card-text"><?= esc($product['deskripsi']) ?></p>
                                     <p class="card-text"><span class="price">Rp <?= number_format($product['harga'], 2, ',', '.') ?></span></p>
-                                    <a href="#" class="btn btn-primary">Beli Sekarang</a>
+                
                                 </div>
                             </div>
                         </a>
