@@ -20,10 +20,36 @@
             width: 100%;
             background-color: #343a40;
             padding: 10px 0;
+            z-index: 1000;
+            /* Make sure footer is on top */
         }
 
         .footer-btn {
             width: 100%;
+        }
+
+        /* Fullscreen dropdown */
+        #checkout-form {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            /* Semi-transparent black background */
+            z-index: 999;
+            /* Ensure form is on top of other content */
+        }
+
+        #checkout-form .container {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background-color: #f8f9fa;
+            padding: 20px;
+            border-radius: 5px;
         }
     </style>
 </head>
@@ -67,10 +93,44 @@
 
     <footer class="bg-dark text-white text-center">
         <div class="container">
+            <div class="dropdown">
+                <button class="btn btn-success dropdown-toggle footer-btn" type="button" id="dropdownCheckout" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    Checkout
+                </button>
+                <div class="dropdown-menu" aria-labelledby="dropdownCheckout" id="checkout-form">
+                    <div class="container">
+                        <form action="<?= site_url('cart/checkout') ?>" method="post" class="px-4 py-3">
+                            <div class="form-group">
+                                <label for="nama">Nama</label>
+                                <input type="text" class="form-control" id="nama" name="nama" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="email">Email</label>
+                                <input type="email" class="form-control" id="email" name="email" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="alamat">Alamat</label>
+                                <textarea class="form-control" id="alamat" name="alamat" rows="3" required></textarea>
+                            </div>
+                            <h4>Total Harga: Rp <?= number_format($totalHarga, 0, ',', '.') ?></h4>
+                            <button type="submit" class="btn btn-success">Checkout</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
             <h4>Total Harga: Rp <?= number_format($totalHarga, 0, ',', '.') ?></h4>
-            <a href="<?= site_url('cart/checkout') ?>" class="btn btn-success footer-btn">Checkout</a>
         </div>
     </footer>
+
+    <!-- Script to toggle checkout form -->
+    <script>
+        $(document).ready(function() {
+            // Toggle the visibility of checkout form when dropdown button is clicked
+            $('#dropdownCheckout').on('click', function() {
+                $('#checkout-form').toggle();
+            });
+        });
+    </script>
 </body>
 
 </html>
