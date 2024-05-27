@@ -74,10 +74,12 @@
     <div class="container mb-5">
         <h1 class="text-center mt-3">Keranjang Belanja</h1>
         <?php
-        $totalHarga = 0; // Inisialisasi total harga
+        $totalHarga = 0;
+        $totalBerat = 0;
         foreach ($cart as $item) :
             $subtotal = $item['jumlah'] * $item['harga'];
-            $totalHarga += $subtotal; // Hitung total harga
+            $totalHarga += $subtotal;
+            $totalBerat += $item['jumlah'] * $item['berat'];
         ?>
             <div class="card cart-item-card">
                 <div class="card-body">
@@ -89,6 +91,11 @@
                 </div>
             </div>
         <?php endforeach; ?>
+        <div class="mt-3">
+            <h4>Berat Total: <?= number_format($totalBerat, 2, ',', '.') ?> kg</h4>
+            <h4>Ongkir: Rp <?= number_format($totalBerat * 2000, 0, ',', '.') ?></h4>
+            <h4>Total Harga (termasuk ongkir): Rp <?= number_format($totalHarga + ($totalBerat * 2000), 0, ',', '.') ?></h4>
+        </div>
     </div>
 
     <footer class="bg-dark text-white text-center">
@@ -112,13 +119,13 @@
                                 <label for="alamat">Alamat</label>
                                 <textarea class="form-control" id="alamat" name="alamat" rows="3" required></textarea>
                             </div>
-                            <h4>Total Harga: Rp <?= number_format($totalHarga, 0, ',', '.') ?></h4>
+                            <h4>Total Harga: Rp <?= number_format($totalHarga + ($totalBerat * 2000), 0, ',', '.') ?></h4>
                             <button type="submit" class="btn btn-success">Checkout</button>
                         </form>
                     </div>
                 </div>
             </div>
-            <h4>Total Harga: Rp <?= number_format($totalHarga, 0, ',', '.') ?></h4>
+            <h4>Total Harga: Rp <?= number_format($totalHarga + ($totalBerat * 2000), 0, ',', '.') ?></h4>
         </div>
     </footer>
 

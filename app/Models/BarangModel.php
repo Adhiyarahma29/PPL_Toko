@@ -9,9 +9,8 @@ class BarangModel extends Model
     protected $table = 'barang';
     protected $primaryKey = 'kode_barang';
     protected $allowedFields = [
-        'kode_barang', 'nama_barang', 'jumlah', 'harga', 'gambar', 'created_at', 'updated_at', 'deleted_at'
+        'kode_barang', 'nama_barang', 'jumlah', 'harga', 'berat', 'gambar', 'created_at', 'updated_at', 'deleted_at'
     ];
-
     // Define return type
     protected $returnType = 'array';
 
