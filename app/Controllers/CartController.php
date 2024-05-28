@@ -77,19 +77,19 @@ class CartController extends Controller
     public function checkout()
     {
         $cart = session()->get('cart') ?? [];
-    
+
         // Calculate total price
         $totalHarga = 0;
         foreach ($cart as $item) {
             $subtotal = $item['jumlah'] * $item['harga'];
             $totalHarga += $subtotal;
         }
-    
+
         // Get form data
         $nama = $this->request->getPost('nama');
         $email = $this->request->getPost('email');
         $alamat = $this->request->getPost('alamat');
-    
+
         // Get nama barang
         $barangModel = new BarangModel();
         $namaBarang = [];
@@ -99,42 +99,47 @@ class CartController extends Controller
                 $namaBarang[] = $barang['nama_barang'];
             }
         }
-    
+
         // Calculate total weight
         $totalBerat = 0;
         foreach ($cart as $item) {
             $totalBerat += $item['jumlah'] * $item['berat'];
         }
-    
+
         // Calculate shipping cost
         $ongkir = max($totalBerat, 1) * 3000;
-    
+
         // Calculate final total price
         $finalTotalHarga = $totalHarga + $ongkir;
-    
+
         // Get next id_transaksi
         $jualModel = new JualModel();
         $next_id = $jualModel->countAllResults() + 1;
-    
+
         // Generate id_transaksi
         $id_transaksi = 'TR' . str_pad($next_id, 3, '0', STR_PAD_LEFT);
-    
-        // Start transaction
-        $db = \Config\Database::connect();
-        $db->transStart();
-    
+
+
+
         // Insert data into 'jual' table
         $jualModel->insert([
             'id_transaksi' => $id_transaksi,
             'nama' => $nama,
             'email' => $email,
             'alamat' => $alamat,
-            'nama_barang' => json_encode($namaBarang), // Store array of barang names as JSON string
+            'nama_barang' => $namaBarang, // Store array of barang names as JSON string
             'total_harga' => $finalTotalHarga,
             'created_at' => date('Y-m-d H:i:s'),
             'updated_at' => date('Y-m-d H:i:s')
         ]);
-    
+
+        // Kurangi stok barang
+        foreach ($cart as $item) {
+            $barangModel->set('jumlah', 'jumlah - ' . $item['jumlah'], false)
+                ->where('kode_barang', $item['kode_barang'])
+                ->update();
+        }
+
         // Insert data into 'penjualan' table
         $penjualanModel = new PenjualanModel();
         foreach ($cart as $item) {
@@ -148,26 +153,10 @@ class CartController extends Controller
                 'updated_at' => date('Y-m-d H:i:s')
             ]);
         }
-    
-        // Kurangi stok barang
-        foreach ($cart as $item) {
-            $barangModel->set('jumlah', 'jumlah - ' . $item['jumlah'], false)
-                ->where('kode_barang', $item['kode_barang'])
-                ->update();
-        }
-    
-        // Complete the transaction
-        $db->transComplete();
-    
-        if ($db->transStatus() === FALSE) {
-            // Something went wrong.
-            return redirect()->to('/cart')->with('error', 'Terjadi kesalahan saat memproses transaksi.');
-        }
-    
+
         // Clear cart after checkout
         session()->remove('cart');
-    
+
         return redirect()->to('/cart')->with('success', 'Pembelian berhasil dilakukan.');
     }
-    
 }
