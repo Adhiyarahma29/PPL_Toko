@@ -30,39 +30,72 @@
                 background-position: 0% 50%;
             }
         }
-
         .navbar {
-            padding-top: 0.5rem;
-            padding-bottom: 0.5rem;
+            padding-top: 0.5rem; /* Mengurangi padding atas */
+            padding-bottom: 0.25rem; /* Mengurangi padding bawah */
+            height: 80px; /* Menetapkan tinggi navbar */
+            display: flex; /* Menggunakan flexbox */
+            justify-content: center; /* Memusatkan elemen horizontal di dalam header */
+            align-items: flex-end; /* Memusatkan elemen vertikal di dalam header */
         }
 
-        .navbar-brand,
-        .nav-link {
-            font-size: 2rem;
+        .navbar-brand {
+            font-size: 1.80rem; /* Mengurangi ukuran font untuk navbar-brand */
+            margin-right: auto; /* Menggeser tulisan "Your Shop" ke kiri */
+            margin-left: auto; /* Menggeser tulisan "Your Shop" ke kanan */
         }
+
+        .navbar-nav .nav-link {
+            font-size: 1.30rem; /* Mengurangi ukuran font untuk navbar-nav */
+        }
+
 
         .card {
+            position: relative;
+            overflow: hidden;
+            transform-style: preserve-3d;
+            perspective: 1000px;
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-            transition: transform 0.2s, box-shadow 0.2s;
+            transition: transform 0.5s, box-shadow 0.5s;
         }
 
         .card:hover {
-            transform: translateY(-10px);
+            transform: translateY(-10px) rotateX(5deg) rotateY(5deg);
             box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
         }
 
-        .card-img-top {
-            width: 100%;
-            height: 200px;
-            object-fit: cover;
-            object-position: center;
+        .card .card-body {
+            position: relative;
+            transition: transform 0.5s;
+            transform-origin: bottom;
         }
 
-        .card-body {
-            text-align: center;
-            background: #fff;
-            border-bottom-left-radius: calc(0.25rem - 1px);
-            border-bottom-right-radius: calc(0.25rem - 1px);
+        .card:hover .card-body {
+            transform: rotateX(-10deg) translateY(-10px);
+        }
+
+        .card .card-body:before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.2);
+            transform: translateY(100%) rotateX(90deg);
+            transition: transform 0.5s;
+        }
+
+        .card:hover .card-body:before {
+            transform: translateY(0) rotateX(0);
+        }
+
+        .card .card-img-top {
+            transition: transform 0.5s;
+        }
+
+        .card:hover .card-img-top {
+            transform: scale(1.1) rotateY(5deg);
         }
 
         .card-title {
@@ -111,10 +144,9 @@
 </head>
 
 <body>
-    <!-- Navbar -->
-    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark navbar-sm">
         <div class="container">
-            <a class="navbar-brand" href="/">Your Shop</a>
+            <a class="navbar-brand" href="/">Daftar Produk</a>
             <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
             </button>
@@ -131,29 +163,29 @@
 
     <!-- Product List -->
     <div class="container">
-        <h1 class="mt-5 text-center text-white">Daftar Produk</h1>
-        <div class="row">
-            <?php if (!empty($products) && is_array($products)) : ?>
-                <?php foreach ($products as $product) : ?>
-                    <div class="col-md-4">
-                        <a href="<?= base_url('detail/' . esc($product['kode_barang'])) ?>" class="text-decoration-none">
-                            <div class="card mb-4">
-                                <img src="<?= esc($product['gambar']) ?>" class="card-img-top" alt="<?= esc($product['nama_barang']) ?>">
-                                <div class="card-body">
-                                    <h5 class="card-title"><?= esc($product['nama_barang']) ?></h5>
-                                    <p class="card-text"><?= esc($product['deskripsi']) ?></p>
-                                    <p class="card-text"><span class="price">Rp <?= number_format($product['harga'], 2, ',', '.') ?></span></p>
-
-                                </div>
+    <!-- <h1 class="mt-5 text-center text-white">Daftar Produk</h1> -->
+    <div class="row">
+        <?php if (!empty($products) && is_array($products)) : ?>
+            <?php foreach ($products as $product) : ?>
+                <div class="col-md-3 mb-4">
+                    <a href="<?= base_url('detail/' . esc($product['kode_barang'])) ?>" class="text-decoration-none">
+                        <div class="card">
+                            <img src="<?= esc($product['gambar']) ?>" class="card-img-top" alt="<?= esc($product['nama_barang']) ?>">
+                            <div class="card-body">
+                                <h5 class="card-title"><?= esc($product['nama_barang']) ?></h5>
+                                <p class="card-text"><?= esc($product['deskripsi']) ?></p>
+                                <p class="card-text"><span class="price">Rp <?= number_format($product['harga'], 2, ',', '.') ?></span></p>
                             </div>
-                        </a>
-                    </div>
-                <?php endforeach; ?>
-            <?php else : ?>
-                <p class="text-center text-white">Tidak ada produk yang ditemukan.</p>
-            <?php endif; ?>
-        </div>
+                        </div>
+                    </a>
+                </div>
+            <?php endforeach; ?>
+        <?php else : ?>
+            <p class="text-center text-white">Tidak ada produk yang ditemukan.</p>
+        <?php endif; ?>
     </div>
+</div>
+
 
 
     <!-- Footer -->
