@@ -51,17 +51,16 @@ class CartController extends Controller
             $data['totalBerat'] += $item['jumlah'] * $item['berat'];
         }
 
+        // Calculate shipping cost based on actual total weight
         // Minimal berat untuk ongkir adalah 1 kg dengan ongkir Rp 3000
-        if ($data['totalBerat'] > 0) {
-            $data['totalOngkir'] = max($data['totalBerat'], 1) * 3000;
-        } else {
-            $data['totalOngkir'] = 0;
-        }
+        $data['totalOngkir'] = $data['totalBerat'] > 0 ? $data['totalBerat'] * 3000 : 0;
 
-        $data['totalHarga'] += $data['totalOngkir']; // Tambahkan ongkir ke total harga
+        // Tambahkan ongkir ke total harga
+        $data['totalHarga'] += $data['totalOngkir'];
 
         return view('v_cart', $data);
     }
+
 
     public function removeFromCart($kode_barang)
     {
@@ -106,8 +105,9 @@ class CartController extends Controller
             $totalBerat += $item['jumlah'] * $item['berat'];
         }
 
-        // Calculate shipping cost
-        $ongkir = max($totalBerat, 1) * 3000;
+        // Round up total weight to the nearest whole kilogram
+        // Calculate shipping cost directly based on actual weight
+        $ongkir = $totalBerat * 3000;
 
         // Calculate final total price
         $finalTotalHarga = $totalHarga + $ongkir;
@@ -119,21 +119,19 @@ class CartController extends Controller
         // Generate id_transaksi
         $id_transaksi = 'TR' . str_pad($next_id, 3, '0', STR_PAD_LEFT);
 
-
-
         // Insert data into 'jual' table
         $jualModel->insert([
             'id_transaksi' => $id_transaksi,
             'nama' => $nama,
             'email' => $email,
             'alamat' => $alamat,
-            'nama_barang' => $namaBarang, // Store array of barang names as JSON string
+            'nama_barang' => json_encode($namaBarang), // Store array of barang names as JSON string
             'total_harga' => $finalTotalHarga,
             'created_at' => date('Y-m-d H:i:s'),
             'updated_at' => date('Y-m-d H:i:s')
         ]);
 
-        // Kurangi stok barang
+        // Reduce stock quantity
         foreach ($cart as $item) {
             $barangModel->set('jumlah', 'jumlah - ' . $item['jumlah'], false)
                 ->where('kode_barang', $item['kode_barang'])
