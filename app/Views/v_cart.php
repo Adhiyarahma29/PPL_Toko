@@ -127,7 +127,7 @@
             <div class="container">
                 <div class="column">
                     <div class="col text-center">
-                        <button class="btn btn-success footer-btn" onclick="showCheckoutForm()">Checkout</button>
+                        <button class="btn btn-success footer-btn" onclick="showCheckoutForm()" <?= empty($cart) ? 'disabled' : '' ?>>Checkout</button>
                     </div>
                     <div>
                         <center>

@@ -125,7 +125,7 @@ class CartController extends Controller
             'nama' => $nama,
             'email' => $email,
             'alamat' => $alamat,
-            'nama_barang' => json_encode($namaBarang), // Store array of barang names as JSON string
+            'nama_barang' => $namaBarang, // Store array of barang names as JSON string
             'total_harga' => $finalTotalHarga,
             'created_at' => date('Y-m-d H:i:s'),
             'updated_at' => date('Y-m-d H:i:s')
